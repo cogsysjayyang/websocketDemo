@@ -1,0 +1,11 @@
+const bullet = []
+bullet.push('1')
+bullet.push('2')
+bullet.push('3')
+console.log(bullet)
+bullet.shift()
+console.log(bullet)
+bullet.pop()
+console.log(bullet)
+bullet.push('4')
+console.log(bullet)
