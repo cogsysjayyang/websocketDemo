@@ -23,8 +23,8 @@ ws.on('connection', (socket) =>{
             console.log('desktopID say:', msgs)
             const desktopID = msgs.toString()
             socket.on(desktopID, (...msgs) =>{
-                console.log('mobileMsg say:',msgs, desktopID)
-                const mobileMsg = `sent from server>>>${msgs}`
+                console.log('mobileMsg say:',"base64", desktopID)
+                //const mobileMsg = `sent from server>>>${msgs}`
                 bullet.push({desktopID: desktopID, mobileMsg: msgs.toString()})
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
@@ -58,5 +58,5 @@ ws.on('connection', (socket) =>{
         } else{
             console.log('bullet is empty')
         }
-    }, 100)
+    }, 1000)
 })
