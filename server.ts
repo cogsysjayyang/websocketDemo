@@ -3,7 +3,7 @@ import * as io from 'socket.io'
 
 interface bullet {
     desktopID: string,
-    mobileMsg: string
+    mobileMsg: any[]
 }
 const server = http.createServer((req, res) =>{
 
@@ -25,7 +25,7 @@ ws.on('connection', (socket) =>{
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
                 //const mobileMsg = `sent from server>>>${msgs}`
-                bullet.push({desktopID: desktopID, mobileMsg: msgs.toString()})
+                bullet.push({desktopID: desktopID, mobileMsg: msgs})
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
     

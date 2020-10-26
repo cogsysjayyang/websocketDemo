@@ -12,10 +12,13 @@ socket.on('desktop', (...msgs) =>{
     socket.emit('desktopID', desktopID)
     socket.on(desktopID, (...msgs) =>{
         index++
-        console.log('desktopGetIDFromMobile:', msgs)
+        console.log('desktopGetIDFromMobile:', "base64")
         console.log(index)
-        const buffer = Buffer.from(msgs.toString(), 'base64')
-        fs.writeFileSync('/Users/jay/Documents/js_workspace/websocketDemo/imagesForMac/4.png', buffer)
+        // const buffer = Buffer.from(msgs.toString(), 'base64')
+        const file = (msgs[0][0] as {fileName:string, file:string}).file
+        const fileName = (msgs[0][0] as {fileName:string, file:string}).fileName
+        const buffer = Buffer.from(file)
+        fs.writeFileSync(`/Users/jay/Documents/js_workspace/websocketDemo/imagesForMac/${fileName}`, buffer)
 
         socket.emit('desktopID', desktopID)
     })
