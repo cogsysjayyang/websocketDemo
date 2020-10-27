@@ -18,7 +18,7 @@ socket.on('desktop', (...msgs) =>{
         const file = (msgs[0][0] as {fileName:string, file:string}).file
         const fileName = (msgs[0][0] as {fileName:string, file:string}).fileName
         const buffer = Buffer.from(file)
-        fs.writeFileSync(`/Users/jay/Documents/js_workspace/websocketDemo/imagesForMac/${fileName}`, buffer)
+        fs.writeFileSync(`/Volumes/PostProcess/PassPhotosLib/${fileName}`, buffer)
 
         socket.emit('desktopID', desktopID)
     })
