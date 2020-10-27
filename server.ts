@@ -8,13 +8,15 @@ interface bullet {
 const server = http.createServer((req, res) =>{
 
 })
-server.listen(8080)
-
+server.listen(8100)
+let clientCount = 0
 const ws = io.listen(server)
 //let desktopID : any = []
 //let mobileMsg : any = []
 let bullet : bullet [] = []
 ws.on('connection', (socket) =>{
+    clientCount++
+    socket.setMaxListeners(100)
     let desktopID : string
     socket.on('client', (...msgs) =>{
         console.log(msgs)
@@ -28,6 +30,7 @@ ws.on('connection', (socket) =>{
                 bullet.push({desktopID: desktopID, mobileMsg: msgs})
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
+                socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
     
             })
             
@@ -40,23 +43,34 @@ ws.on('connection', (socket) =>{
             desktopID = msgs.toString()
             console.log('get ID', desktopID)
         })
+
+        
+        const timer = setInterval(() =>{
+            if (bullet.length>0) {
+                const sigleBullet = bullet.shift()
+                if (sigleBullet.desktopID === desktopID) {
+                    console.log("sent to", desktopID)
+                    socket.emit(sigleBullet.desktopID, sigleBullet.mobileMsg)
+                    desktopID = undefined
+                    socket.on('desktopID', (...msgs) =>{
+                        desktopID = msgs.toString()
+                    })
+                } else{
+                    bullet.push(sigleBullet)
+                }   
+            } else{
+                console.log(`bullet is empty  ${clientCount}`, Date.now())
+                if (socket.disconnected) {
+                    clearInterval(timer)
+                }
+            }
+        }, 1000)
+        
     })
 
-    setInterval(() =>{
-        if (bullet.length>0) {
-            const sigleBullet = bullet.shift()
-            if (sigleBullet.desktopID === desktopID) {
-                console.log("sent to", desktopID)
-                socket.emit(sigleBullet.desktopID, sigleBullet.mobileMsg)
-                desktopID = undefined
-                socket.on('desktopID', (...msgs) =>{
-                    desktopID = msgs.toString()
-                })
-            } else{
-                bullet.push(sigleBullet)
-            }   
-        } else{
-            console.log('bullet is empty')
-        }
-    }, 1000)
+    socket.on('disconnect', ()=>{
+        clientCount--
+    })
+
+
 })

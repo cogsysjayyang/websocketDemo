@@ -3,7 +3,7 @@ import * as fs from 'fs'
 let desktopID : any = 'FromDesktop2'
 let mobileMsg : any = []
 let index = 0
-const socket = io.connect('ws://localhost:8080/')
+const socket = io.connect('ws://www.olknow.com:8100/')
 
 socket.emit('desktop', 'i am desktop')
 
@@ -22,6 +22,10 @@ socket.on('desktop', (...msgs) =>{
 
         socket.emit('desktopID', desktopID)
     })
+})
+process.on('SIGINT',() => {
+    socket.disconnect()
+    console.log("mac_desktop exited!!!")
 })
 // socket.on('mobileMsg', (...msgs) =>{
 //     //mobileMsg = msgs
