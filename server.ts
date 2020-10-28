@@ -16,7 +16,7 @@ const ws = io.listen(server)
 let bullet : bullet [] = []
 ws.on('connection', (socket) =>{
     clientCount++
-    socket.setMaxListeners(100)
+    socket.setMaxListeners(5)
     let desktopID : string
     socket.on('client', (...msgs) =>{
         console.log(msgs)
@@ -52,7 +52,7 @@ ws.on('connection', (socket) =>{
                     console.log("sent to", desktopID)
                     socket.emit(sigleBullet.desktopID, sigleBullet.mobileMsg)
                     desktopID = undefined
-                    socket.on('desktopID', (...msgs) =>{
+                    socket.once('desktopID', (...msgs) =>{
                         desktopID = msgs.toString()
                     })
                 } else{
