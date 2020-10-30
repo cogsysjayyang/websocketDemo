@@ -1,6 +1,9 @@
 import * as http from 'http'
 import * as io from 'socket.io'
-
+interface savedList {
+    desktopID: string,
+    list: string[]
+}
 interface bullet {
     desktopID: string,
     mobileMsg: any[]
@@ -13,6 +16,7 @@ let clientCount = 0
 const ws = io.listen(server)
 //let desktopID : any = []
 //let mobileMsg : any = []
+let savedList : savedList [] = []
 let bullet : bullet [] = []
 ws.on('connection', (socket) =>{
     clientCount++
@@ -33,6 +37,9 @@ ws.on('connection', (socket) =>{
                 socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
     
             })
+            //savedList.push({desktopID: desktopID, list: []})
+            console.log("will go", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+            socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
             
         })
     })
@@ -42,6 +49,13 @@ ws.on('connection', (socket) =>{
         socket.on('desktopID', (...msgs) =>{
             desktopID = msgs.toString()
             console.log('get ID', desktopID)
+            
+            socket.on(`${desktopID}/list`, (...msgs) =>{
+                console.log("list", msgs)
+                savedList = savedList.filter(item => item.desktopID !== desktopID)
+                savedList.push({desktopID: desktopID, list: msgs})
+            })
+        
         })
 
         
@@ -54,6 +68,7 @@ ws.on('connection', (socket) =>{
                     desktopID = undefined
                     socket.once('desktopID', (...msgs) =>{
                         desktopID = msgs.toString()
+                        socket.emit(`${desktopID}/list`)
                     })
                 } else{
                     bullet.push(sigleBullet)

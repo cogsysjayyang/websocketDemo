@@ -1,5 +1,6 @@
 import * as io from 'socket.io-client'
 import * as fs from 'fs'
+import * as glob from 'glob'
 let desktopID : any = 'FromDesktop2'
 let mobileMsg : any = []
 let index = 0
@@ -21,6 +22,26 @@ socket.on('desktop', (...msgs) =>{
         fs.writeFileSync(`/Volumes/PostProcess/PassPhotosLib/${fileName}`, buffer)
 
         socket.emit('desktopID', desktopID)
+    })
+
+    const imgFileList =  glob.sync(`/Volumes/PostProcess/PassPhotosLib/*.*`)
+    for (let index = 0; index < imgFileList.length; index++) {
+        const element = imgFileList[index]
+        const elements = element.split("/")
+        imgFileList[index] = elements[elements.length - 1]
+    }
+    console.log(`${desktopID}/list`, imgFileList)
+    socket.emit(`${desktopID}/list`, imgFileList)
+    
+    socket.on(`${desktopID}/list`, () =>{
+        const imgFileList =  glob.sync(`/Volumes/PostProcess/PassPhotosLib/*.*`)
+        for (let index = 0; index < imgFileList.length; index++) {
+            const element = imgFileList[index]
+            const elements = element.split("/")
+            imgFileList[index] = elements[elements.length - 1]
+        }
+        
+        socket.emit(`${desktopID}/list`, imgFileList)
     })
 })
 process.on('SIGINT',() => {
