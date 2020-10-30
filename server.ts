@@ -38,7 +38,7 @@ ws.on('connection', (socket) =>{
     
             })
             //savedList.push({desktopID: desktopID, list: []})
-            console.log("will go", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+            //console.log("will go", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
             socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
             
         })
@@ -51,7 +51,7 @@ ws.on('connection', (socket) =>{
             console.log('get ID', desktopID)
             
             socket.on(`${desktopID}/list`, (...msgs) =>{
-                console.log("list", msgs)
+                //console.log("list", msgs)
                 savedList = savedList.filter(item => item.desktopID !== desktopID)
                 savedList.push({desktopID: desktopID, list: msgs})
             })

@@ -30,7 +30,7 @@ socket.on('desktop', (...msgs) =>{
         const elements = element.split("/")
         imgFileList[index] = elements[elements.length - 1]
     }
-    console.log(`${desktopID}/list`, imgFileList)
+    //console.log(`${desktopID}/list`, imgFileList)
     socket.emit(`${desktopID}/list`, imgFileList)
     
     socket.on(`${desktopID}/list`, () =>{
