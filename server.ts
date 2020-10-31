@@ -34,7 +34,8 @@ ws.on('connection', (socket) =>{
                 bullet.push({desktopID: desktopID, mobileMsg: msgs})
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
-                socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
+                // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
+                socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
     
             })
             //savedList.push({desktopID: desktopID, list: []})
