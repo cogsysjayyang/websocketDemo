@@ -51,7 +51,7 @@ ws.on('connection', (socket) =>{
             desktopID = msgs.toString()
             console.log('get ID', desktopID)
             
-            socket.on(`${desktopID}/list`, (...msgs) =>{
+            socket.once(`${desktopID}/list`, (...msgs) =>{
                 //console.log("list", msgs)
                 savedList = savedList.filter(item => item.desktopID !== desktopID)
                 savedList.push({desktopID: desktopID, list: msgs})
