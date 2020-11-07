@@ -1,6 +1,9 @@
 import * as http from 'http'
 import * as io from 'socket.io'
-
+interface savedList {
+    desktopID: string,
+    list: string[]
+}
 interface bullet {
     desktopID: string,
     mobileMsg: any[]
@@ -13,14 +16,15 @@ let clientCount = 0
 const ws = io.listen(server)
 //let desktopID : any = []
 //let mobileMsg : any = []
+let savedList : savedList [] = []
 let bullet : bullet [] = []
 ws.on('connection', (socket) =>{
     clientCount++
-    socket.setMaxListeners(5)
+    //socket.setMaxListeners(5)
     let desktopID : string
     socket.on('client', (...msgs) =>{
         console.log(msgs)
-        socket.emit('client', 'connected!!!>>>>client')
+        //socket.emit('client', 'connected!!!>>>>client')
         socket.on('desktopID', (...msgs) =>{
             console.log('desktopID say:', msgs)
             const desktopID = msgs.toString()
@@ -30,9 +34,13 @@ ws.on('connection', (socket) =>{
                 bullet.push({desktopID: desktopID, mobileMsg: msgs})
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
-                socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
+                // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
+                socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
     
             })
+            //savedList.push({desktopID: desktopID, list: []})
+            //console.log("will go", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+            socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
             
         })
     })
@@ -42,6 +50,13 @@ ws.on('connection', (socket) =>{
         socket.on('desktopID', (...msgs) =>{
             desktopID = msgs.toString()
             console.log('get ID', desktopID)
+            
+            socket.once(`${desktopID}/list`, (...msgs) =>{
+                //console.log("list", msgs)
+                savedList = savedList.filter(item => item.desktopID !== desktopID)
+                savedList.push({desktopID: desktopID, list: msgs})
+            })
+        
         })
 
         
@@ -54,6 +69,7 @@ ws.on('connection', (socket) =>{
                     desktopID = undefined
                     socket.once('desktopID', (...msgs) =>{
                         desktopID = msgs.toString()
+                        socket.emit(`${desktopID}/list`)
                     })
                 } else{
                     bullet.push(sigleBullet)
