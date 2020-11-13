@@ -21,7 +21,7 @@ let bullet : bullet [] = []
 ws.on('connection', (socket) =>{
     clientCount++
     //socket.setMaxListeners(5)
-    let desktopID : string
+
     socket.on('client', (...msgs) =>{
         console.log(msgs)
         //socket.emit('client', 'connected!!!>>>>client')
@@ -35,7 +35,7 @@ ws.on('connection', (socket) =>{
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
                 // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
-                socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+                //socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
     
             })
             //savedList.push({desktopID: desktopID, list: []})
@@ -45,11 +45,12 @@ ws.on('connection', (socket) =>{
         })
     })
     socket.on('desktop', (...msgs) =>{
+        let desktopID : string
         console.log(msgs)
         socket.emit('desktop', 'connected!!!>>>>desktop')
-        socket.on('desktopID', (...msgs) =>{
+        socket.once('desktopID', (...msgs) =>{
             desktopID = msgs.toString()
-            console.log('get ID', desktopID)
+            console.log('get ID for first check from desktop!!!', desktopID)
             
             socket.once(`${desktopID}/list`, (...msgs) =>{
                 //console.log("list", msgs)
@@ -59,8 +60,10 @@ ws.on('connection', (socket) =>{
         
         })
 
-        
-        const timer = setInterval(() =>{
+        socket.on('online', (...msgs)=>{
+            console.log('check online', msgs)
+
+            
             if (bullet.length>0) {
                 const sigleBullet = bullet.shift()
                 if (sigleBullet.desktopID === desktopID) {
@@ -77,10 +80,33 @@ ws.on('connection', (socket) =>{
             } else{
                 console.log(`bullet is empty  ${clientCount}`, Date.now())
                 if (socket.disconnected) {
-                    clearInterval(timer)
+                    console.log(`closed : `, desktopID)
                 }
             }
-        }, 1000)
+
+        })
+        
+        // const timer = setInterval(() =>{
+        //     if (bullet.length>0) {
+        //         const sigleBullet = bullet.shift()
+        //         if (sigleBullet.desktopID === desktopID) {
+        //             console.log("sent to", desktopID)
+        //             socket.emit(sigleBullet.desktopID, sigleBullet.mobileMsg)
+        //             desktopID = undefined
+        //             socket.once('desktopID', (...msgs) =>{
+        //                 desktopID = msgs.toString()
+        //                 socket.emit(`${desktopID}/list`)
+        //             })
+        //         } else{
+        //             bullet.push(sigleBullet)
+        //         }   
+        //     } else{
+        //         console.log(`bullet is empty  ${clientCount}`, Date.now())
+        //         if (socket.disconnected) {
+        //             clearInterval(timer)
+        //         }
+        //     }
+        // }, 1000)
         
     })
 
