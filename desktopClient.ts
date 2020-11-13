@@ -12,7 +12,7 @@ socket.on('desktop', (...msgs) =>{
     socket.emit('desktopID', desktopID)
     socket.on(desktopID, (...msgs) =>{
         index++
-        console.log('desktopGetIDFromMobile:', msgs)
+        console.log('desktopGetIDFromMobile:', ...msgs)
         console.log(index)
         socket.emit('desktopID', desktopID)
     })

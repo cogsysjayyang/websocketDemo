@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client'
 
 let desktopID : any = 'FromDesktop'
-let mobileMsg : any = ['cl1', 'cl2']
+let mobileMsg : any[] = ['cl1', 'cl2']
 let index = 0
 const socket = io.connect('ws://localhost:8080/')
 
@@ -12,7 +12,8 @@ socket.on('client', (...msgs) =>{
     socket.emit('desktopID', desktopID)
     setInterval(() =>{
         index++
-        socket.emit(desktopID, `${new Date().getTime()} from IOS<<<`)
+        //socket.emit(desktopID, `${new Date().getTime()} from IOS<<<`)
+        socket.emit(desktopID, ...mobileMsg)
         console.log(index)
     }, 2000)
 })
