@@ -30,20 +30,16 @@ ws.on('connection', (socket) =>{
             const desktopID = msgs.toString()
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
-                //const mobileMsg = `sent from server>>>${msgs}`
 
                 bullet.push({desktopID: desktopID, mobileMsg: msgs})
-                
-                //mainSocket.emit(desktopID, mobileMsg)
-                //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
-                // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
-                //socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
-                //socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
-    
+
             })
             //savedList.push({desktopID: desktopID, list: []})
             //console.log("will go", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
-            socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+            socket.on('ios', (...msgs) =>{
+                console.log(msgs)
+                socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])  
+            })
             
         })
     })
