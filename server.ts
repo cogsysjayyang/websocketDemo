@@ -30,7 +30,7 @@ ws.on('connection', (socket) =>{
             const desktopID = msgs.toString()
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
-                if (bullet.filter(item => item.desktopID === desktopID && item.mobileMsg === msgs).length > 0) {
+                if (bullet.filter(item => item.desktopID === desktopID).length > 0) {
                     console.log("exist in bullet!!!")
                 } else {
                     bullet.push({desktopID: desktopID, mobileMsg: msgs})
@@ -63,7 +63,7 @@ ws.on('connection', (socket) =>{
         })
 
         socket.on('online', (...msgs)=>{
-            console.log('check online', msgs)
+            //console.log('checked is online now!!!')
 
 
             if (bullet.length>0) {
@@ -85,7 +85,7 @@ ws.on('connection', (socket) =>{
                     bullet.push(sigleBullet)
                 }   
             } else{
-                console.log(`bullet is empty  ${clientCount}`, Date.now())
+                console.log(`bullet is empty  ${clientCount}`, new Date())
                 if (socket.disconnected) {
                     console.log(`closed : `, desktopID)
                 }
