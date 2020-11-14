@@ -30,7 +30,7 @@ ws.on('connection', (socket) =>{
             const desktopID = msgs.toString()
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
-                if (bullet.includes({desktopID: desktopID, mobileMsg: msgs})) {
+                if (bullet.filter(item => item.desktopID === desktopID && item.mobileMsg === msgs).length > 0) {
                     console.log("exist in bullet!!!")
                 } else {
                     bullet.push({desktopID: desktopID, mobileMsg: msgs})
