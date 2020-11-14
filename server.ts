@@ -30,8 +30,11 @@ ws.on('connection', (socket) =>{
             const desktopID = msgs.toString()
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
-
-                bullet.push({desktopID: desktopID, mobileMsg: msgs})
+                if (bullet.includes({desktopID: desktopID, mobileMsg: msgs})) {
+                    console.log("exist in bullet!!!")
+                } else {
+                    bullet.push({desktopID: desktopID, mobileMsg: msgs})
+                }
 
             })
             //savedList.push({desktopID: desktopID, list: []})
