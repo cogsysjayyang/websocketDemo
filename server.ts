@@ -73,6 +73,11 @@ ws.on('connection', (socket) =>{
                     socket.once('desktopID', (...msgs) =>{
                         desktopID = msgs.toString()
                         socket.emit(`${desktopID}/list`)
+                        socket.once(`${desktopID}/list`, (...msgs) =>{
+                            //console.log("list", msgs)
+                            savedList = savedList.filter(item => item.desktopID !== desktopID)
+                            savedList.push({desktopID: desktopID, list: msgs})
+                        })
                     })
                 } else{
                     bullet.push(sigleBullet)
