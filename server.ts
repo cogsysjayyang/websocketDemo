@@ -31,7 +31,9 @@ ws.on('connection', (socket) =>{
             socket.on(desktopID, (...msgs) =>{
                 console.log('mobileMsg say:',"base64", desktopID)
                 //const mobileMsg = `sent from server>>>${msgs}`
-                bullet.push({desktopID: desktopID, mobileMsg: msgs})
+                if (!bullet.includes({desktopID: desktopID, mobileMsg: msgs})) {
+                    bullet.push({desktopID: desktopID, mobileMsg: msgs})
+                }
                 //mainSocket.emit(desktopID, mobileMsg)
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
                 // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
