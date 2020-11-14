@@ -36,6 +36,7 @@ ws.on('connection', (socket) =>{
                 //console.log('loop>>>',socket.emit(desktopID, mobileMsg))
                 // socket.emit("ios", (msgs[0] as {fileName:string, file:string}).fileName)
                 //socket.emit("ios", savedList.filter(item => item.desktopID === desktopID)[0].list[0])
+                socket.emit(`${desktopID}/list`, savedList.filter(item => item.desktopID === desktopID)[0].list[0])
     
             })
             //savedList.push({desktopID: desktopID, list: []})
@@ -63,7 +64,7 @@ ws.on('connection', (socket) =>{
         socket.on('online', (...msgs)=>{
             console.log('check online', msgs)
 
-            
+
             if (bullet.length>0) {
                 const sigleBullet = bullet.shift()
                 if (sigleBullet.desktopID === desktopID) {
